@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 import secrets
 
 
+
 class BankAccount:
 
     def _generate_account_number(self):
@@ -21,6 +22,7 @@ class BankAccount:
         self.__account_number = self._generate_account_number()
         self.__account_list = []
         self.__account_list.append(self.__account_number)
+
         print(
             f"""예금 계좌가 만들어졌습니다. {self.name}님의 {self.__account_number}이며,
               현재 당신의 잔액은 {self.__balance}이며, 현재 {"출금할 수 없습니다." if self.get_account_restriction() == True else "현재 출금할 수 있습니다."}"""
@@ -29,8 +31,21 @@ class BankAccount:
                 현재 당신의 잔액은 {self.__balance}원입니다.
               """
         )
+    def get_account_list(self):
+        return self.__account_list
     def get_account_number(self):
         return self.__account_number
+
+    def get_balance(self):
+        return self.__balance
+
+    def withdraw_money(self, name, account_number, amount):
+        self.__balance -= amount  # 대입 연산으로 잔액을 업데이트
+        return self.__balance
+
+    def deposit_money(self, name, account_number, amount):
+        self.__balance += amount  # 대입 연산으로 잔액을 추가
+        return self.__balance
 
     @abstractmethod
     def info():

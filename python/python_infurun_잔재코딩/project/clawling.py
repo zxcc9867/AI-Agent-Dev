@@ -36,6 +36,7 @@ title = data.select("div.list_item")
 excel 파일 조작 
 """
 import openpyxl
+from openpyxl.styles import Alignment, Font
 
 excel_file = openpyxl.Workbook()
 
@@ -45,11 +46,26 @@ sheet = excel_file.active
 # 데이터 추가하기
 sheet.title = "게시글"
 
+
+wrap_alignment = Alignment(wrap_text=True)
+bold_font = Font(bold=True)
+header_font = Font(bold=True, size=14)
+center_alignment = Alignment(horizontal="center", vertical="center")
+index = 0
+
 header = ["순번", "게시글 제목", "댓글"]
 
 sheet.append(header)
 
-sheet.column_dimensions["A"].width = 20
+## sheet[1]은 헤더행을 의미한다.
+for row in sheet.iter_rows():
+    for cell in row:
+        cell.font = header_font
+        cell.alignment = center_alignment
+        print(f"셀 위치: {cell.coordinate}, 셀 값: {cell.value}")
+
+
+sheet.column_dimensions["A"].width = 50
 sheet.column_dimensions["B"].width = 20
 sheet.column_dimensions["C"].width = 100
 
@@ -59,7 +75,6 @@ sheet.column_dimensions["C"].width = 100
 
 """
 
-index = 0
 
 for items in title[:10]:
     title = items.select_one("span.subject_fixed")
@@ -68,14 +83,15 @@ for items in title[:10]:
     data = {}
 
     if title != None:
-        res_title = requests.get(
-            "https://davelee-fun.github.io/trial/board/" + link["href"]
-        )
+        link_url = "https://davelee-fun.github.io/trial/board/" + link["href"]
+        res_title = requests.get(link_url)
         soup_title = BeautifulSoup(res_title.content, "html.parser")
         post_comment = soup_title.select("div.comment_view")
         index += 1  # 인덱스 추가
         data["index"] = index  # 인덱스 추가
         data["title"] = title.get_text().strip()
+        # sheet.cell(row=index+1, column=2).hyperlink=link_url
+
         comments_text = []
         print(index, title.get_text().strip())
         print(f"data 딕셔너리{data}")
@@ -83,7 +99,7 @@ for items in title[:10]:
             # comment_text는 문자열로 출려된다.
             comment_text = reply.get_text().strip().replace("\n", "").replace("\t", "")
             print(f"타입 체크 {type(comment_text)}")
-            comments_text.append(f"{idx+1}, {comment_text}\n")
+            comments_text.append(f"{idx+1}. {comment_text}\n")
             print(f"댓글 리스트 {comments_text}")
             # excel에는 리스트 형태의 데이터를 추가할 수 없으므로, 문자열로 만들어주어야 한다.
             data["comment"] = "".join(comments_text).strip()
@@ -91,6 +107,8 @@ for items in title[:10]:
             print(f"data {data['comment']}")
             print("ㄴ", reply.get_text().strip().replace("\n", "").replace("\t", ""))
         sheet.append(list(data.values()))  # dict.values()를 list로 변환하여 append
-# 슬래시 사용
-excel_file.save("./project/게시글_크롤링_결과.xlsx")
+        sheet.cell(row=index + 1, column=2).hyperlink = link_url
+        sheet.cell(row=index + 1, column=1).alignment = center_alignment
+        sheet.cell(row=index + 1, column=1).font = Font(bold=True, size=10)
+excel_file.save("./게시글_크롤링_결과.xlsx")
 excel_file.close()
