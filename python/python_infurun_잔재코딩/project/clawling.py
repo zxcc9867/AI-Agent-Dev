@@ -36,7 +36,7 @@ title = data.select("div.list_item")
 excel 파일 조작 
 """
 import openpyxl
-from openpyxl.styles import Alignment, Font
+from openpyxl.styles import Alignment, Font, colors, Border, Side, PatternFill
 
 excel_file = openpyxl.Workbook()
 
@@ -47,11 +47,21 @@ sheet = excel_file.active
 sheet.title = "게시글"
 
 
-wrap_alignment = Alignment(wrap_text=True)
-bold_font = Font(bold=True)
+bold_font = Font(bold=True, size=12, underline="single")
 header_font = Font(bold=True, size=14)
-center_alignment = Alignment(horizontal="center", vertical="center")
+link_font = Font(bold=True, size=12, color=colors.BLUE, underline="single")
+center_alignment_wrap = Alignment(
+    horizontal="center", vertical="center", wrap_text=True
+)
 index = 0
+table_style = Border(
+    left=Side(style="thin"),
+    right=Side(style="thin"),
+    top=Side(style="thin"),
+    bottom=Side(style="thin"),
+)
+
+ground_color = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
 header = ["순번", "게시글 제목", "댓글"]
 
@@ -61,7 +71,8 @@ sheet.append(header)
 for row in sheet.iter_rows():
     for cell in row:
         cell.font = header_font
-        cell.alignment = center_alignment
+        cell.alignment = center_alignment_wrap
+        cell.fill = ground_color
         print(f"셀 위치: {cell.coordinate}, 셀 값: {cell.value}")
 
 
@@ -96,7 +107,7 @@ for items in title[:10]:
         print(index, title.get_text().strip())
         print(f"data 딕셔너리{data}")
         for idx, reply in enumerate(post_comment):
-            # comment_text는 문자열로 출려된다.
+            # comment_text는 문자열로 출력된다.
             comment_text = reply.get_text().strip().replace("\n", "").replace("\t", "")
             print(f"타입 체크 {type(comment_text)}")
             comments_text.append(f"{idx+1}. {comment_text}\n")
@@ -108,7 +119,11 @@ for items in title[:10]:
             print("ㄴ", reply.get_text().strip().replace("\n", "").replace("\t", ""))
         sheet.append(list(data.values()))  # dict.values()를 list로 변환하여 append
         sheet.cell(row=index + 1, column=2).hyperlink = link_url
-        sheet.cell(row=index + 1, column=1).alignment = center_alignment
+        sheet.cell(row=index + 1, column=2).font = link_font
+        sheet.cell(row=index + 1, column=1).alignment = center_alignment_wrap
         sheet.cell(row=index + 1, column=1).font = Font(bold=True, size=10)
+        for row in sheet.iter_rows():
+            for cell in row:
+                cell.border = table_style
 excel_file.save("./게시글_크롤링_결과.xlsx")
 excel_file.close()
