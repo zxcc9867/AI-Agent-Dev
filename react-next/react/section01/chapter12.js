@@ -26,9 +26,10 @@ function repeat(count,callback){
     }
 }
 
-repeat(5, function(idx){
+repeat(5, (idx) => {
     console.log(idx)
 })
+
 
 a = (value) => {return value+1} // return을 해야 값을 반환 
 
