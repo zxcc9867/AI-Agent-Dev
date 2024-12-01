@@ -54,3 +54,14 @@ repeat(5,function (idx){{
 
 // repeatDouble2(5)
 
+// 복습 
+
+a = () => console.log('hello')
+
+const b = (a,b) => a+b 
+
+console.log(b(1,2))
+
+// 익명 함수 
+
+const ano = function () { console.log('hello')}
