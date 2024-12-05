@@ -71,3 +71,14 @@ for ( let a in arr){
     console.log(arr[a]) // 이렇게 해야한다. 
 
 }
+
+let object = {
+    name : 'kim',
+    age : 20,
+    hobby : ['reading', 'painting']
+}
+
+
+for (item in object){
+    console.log(`item : ${item} , ${object[item]}`)
+}
