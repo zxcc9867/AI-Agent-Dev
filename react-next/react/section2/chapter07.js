@@ -1,116 +1,149 @@
-// 5가지 요소 순회 및 탐색 메서드 
-// 1. forEach 
-// 모든 요소를 순회하면서 각각의 요소에 특정 동작을 수행시키는 메서드 
+// 5가지 요소 순회 및 탐색 메서드
+// 1. forEach
+// 모든 요소를 순회하면서 각각의 요소에 특정 동작을 수행시키는 메서드
 
-let arr1 = [1,2,3]
+let arr1 = [1, 2, 3];
 
-arr1.forEach(function(item,idx,arr){
-    // console.log(idx, item*2)
-})
+arr1.forEach(function (item, idx, arr) {
+  // console.log(idx, item*2)
+});
 
-let dobuledArr = []
+let dobuledArr = [];
 
-arr1.forEach((item)=>{
-    dobuledArr.push(item*2) // arr1의 각 원소에 대해서 곱하기 2를 하고 새로운 배열에 푸시 
-})
+arr1.forEach((item) => {
+  dobuledArr.push(item * 2); // arr1의 각 원소에 대해서 곱하기 2를 하고 새로운 배열에 푸시
+});
 
-// 2. includes 
+// 2. includes
 
-// 배열의 특정 요소가 있는지 확인하는 메서드 
+// 배열의 특정 요소가 있는지 확인하는 메서드
 
-let arr2 = [1,2,3]
-const check = arr2.includes(3)
+let arr2 = [1, 2, 3];
+const check = arr2.includes(3);
 
 // console.log(check)
 
 // 3. indexOf
 
+// 특정 요소의 인덱스를 찾아서 반환하는 메서드
 
+let arr5 = [1, 2, 3];
 
-// 특정 요소의 인덱스를 찾아서 반환하는 메서드 
+let index = arr5.indexOf(2);
+console.log(index); // 1번째 있다고 반환 중복일 경우, 맨처음 인덱스 반환
+// 존재 하지 않을 경우, -1 반환
 
-let arr5=[1,2,3]
+let object1 = [{ name: "park" }, { name: "jin" }];
 
-let index = arr5.indexOf(2)
-console.log(index) // 1번째 있다고 반환 중복일 경우, 맨처음 인덱스 반환 
-// 존재 하지 않을 경우, -1 반환 
-
-let object1 = [
-    {name : 'park'},
-    {name :  'jin'}
-]
-
-let check_index = object1.indexOf({name:'park'})
+let check_index = object1.indexOf({ name: "park" });
 
 // console.log(check_index) // -1
 
-
-
 // findIndex
 
-let object2 = [
-    {name : 'park'},
-    {name :  'jin'}
-]
+let object2 = [{ name: "park" }, { name: "jin" }];
 
-const check_index2 = object2.findIndex((item)=> item.name === 'park')
+const check_index2 = object2.findIndex((item) => item.name === "park");
 
-console.log(check_index2) // 0이라고 출력이 된다.즉 첫번째에 있다라는 것 
+console.log(check_index2); // 0이라고 출력이 된다.즉 첫번째에 있다라는 것
 
-// 모든 요소를 순회하면서, 콜백함수를 만족하는 그런 
+// 모든 요소를 순회하면서, 콜백함수를 만족하는 그런
 
-// 특정 요소의 인덱스를 반환하는 메서드 
+// 특정 요소의 인덱스를 반환하는 메서드
 
-let arr6 = [1,2,3,4,5]
+let arr6 = [1, 2, 3, 4, 5];
 
-const findIndex = arr6.findIndex((index)=>{
-    if (index === 5){
-        return true;
-    }
-    })
+const findIndex = arr6.findIndex((index) => {
+  if (index === 5) {
+    return true;
+  }
+});
 
-console.log(findIndex) // 4번째
+console.log(findIndex); // 4번째
 
-
-const findIndex2 = arr6.findIndex((index)=>index === 5)
+const findIndex2 = arr6.findIndex((index) => index === 5);
 
 // console.log(findIndex2) // 4번째
 
+// 5. find
 
-// 5. find 
+// 모든 요소를 순회하면서 콜백함수를 만족하는 요소를 찾는데, 요소를 그대로 반환
 
-// 모든 요소를 순회하면서 콜백함수를 만족하는 요소를 찾는데, 요소를 그대로 반환 
+let arr7 = [
+  { name: "test" },
+  {
+    name: "test2",
+  },
+];
 
-let arr7= [
-    { name : 'test'
-    },
-    {
-        name : 'test2'
-    }
-]
+const finded = arr7.find((item) => item.name === "test2");
 
+console.log(finded); // { name: 'test2' }
 
-const finded = arr7.find((item)=> item.name === 'test2')
-
-console.log(finded) // { name: 'test2' }
-
-
-
-arr9=[1,5,6,7,]
+arr9 = [1, 5, 6, 7];
 
 /*rest를 사용하지 않으면, 배열의 모든 원소를 받기 위한 변수를 매개변수로 정의해야 한다. */
-const arrow = (a,b,c,)=>{ // { name: 'test
-    console.log(a,b,c)
-}
+const arrow = (a, b, c) => {
+  // { name: 'test
+  console.log(a, b, c);
+};
 
-arrow(...arr9) // 10
+arrow(...arr9); // 10
 
-// rest를 사용하면 , 한번에 배열로 받고, 구조 분해할당을 통해 
-// 원소를 넣을 수 있다. 
+// rest를 사용하면 , 한번에 배열로 받고, 구조 분해할당을 통해
+// 원소를 넣을 수 있다.
 
-const arrow2 = (...arr9)=>{ // { name: 'test
-    [a,b,c] = arr9
-    console.log(a,b,c)
-}
+const arrow2 = (...arr9) => {
+  // { name: 'test
+  [a, b, c] = arr9;
+  console.log(a, b, c);
+};
 
-arrow(...arr9) // 10
+arrow(...arr9); // 10
+
+/// for each 각 원소에 대해서 처리 수행
+
+// foreach는 매개변수를 3개까지 받을 수 있다.
+
+// foreach의 매개변수에는 값이 고정되어 있다.
+
+`첫번째는 원소, 두번째 매개변수는 인덱스, 세번째 인덱스는 호출된 배열 전체체`;
+
+arr_test = [1, 2, 3, 4, 5];
+
+// arr_test.forEach((item, index, num) => {
+//   console.log(`${(item, index, num)}`);
+//   console.log(`num : ${num}`);
+// });
+
+// foreach는 반환값이 없다.
+arr_test.forEach(function (item, index, num) {
+  console.log(`${index}, ${item ** 2}, ${num})}`);
+});
+
+// console.log(`forEach 테스트 ${}`);
+
+// find 메서드
+
+// 배열 형태에서 사용가능 그리고 콜백함수
+
+let object_test = [
+  {
+    name: "kim",
+    age: 20,
+    hobby: ["reading", "painting"],
+  },
+];
+
+// item에 배열의 각 요소가 전달된다. 
+console.log(object_test.find((item) => item.name === "kim"));
+
+let people = [
+  { name: "kim", age: 20, hobby: ["reading", "painting"] },
+  { name: "lee", age: 25, hobby: ["sports", "music"] },
+  { name: "park", age: 22, hobby: ["traveling", "gaming"] },
+];
+
+// 조건에 맞는 첫 번째 요소 찾기
+const result = people.find((person) => person.name === "lee");
+console.log(result);

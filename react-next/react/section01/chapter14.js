@@ -28,6 +28,7 @@ for (let i = 0; i < 10 ; i++) {
     function func(){ // 전역 스코프
         
     }
+    
 }
 
 // func() // 에러 발생 
