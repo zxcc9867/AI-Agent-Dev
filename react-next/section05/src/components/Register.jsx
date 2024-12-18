@@ -7,21 +7,21 @@
 
 // onChange 속성은 입력값이 변경될때마다 호출된다.
 // 입력 이벤트가 발생하면 지정된 함수가 자동으로 실행된다.
-import { useState, useRef } from "react";
+import { useState, useRef } from 'react';
 const Register = () => {
   const [input, setInput] = useState({
-    name: "",
-    birth: "",
-    country: "",
-    bio: "",
+    name: '',
+    birth: '',
+    country: '',
+    bio: '',
   });
 
   const countRef = useRef(0);
-  const inputRef = useRef();
-  console.log(inputRef);
+  const inputRef = useRef(null);
+
   const onSubmit = () => {
-    if (input.name === "") {
-    //   console.log("inputRef.current:", inputRef.current);
+    if (input.name === '') {
+      console.log('inputRef.current:', inputRef.current);
       // 이름을 입력하는 DOM 요소 포커스 -> 특정 필드를 가르키도록 만든다.
       inputRef.current.focus();
       return;
@@ -31,7 +31,7 @@ const Register = () => {
   const onChange = (e) => {
     console.log(e.target.name, e.target.value);
     countRef.current++;
-    
+
     setInput({
       ...input,
       [e.target.name]: e.target.value, /// [e.target.name]의 값이 프로퍼티의 키로 설정된다.
@@ -47,13 +47,12 @@ const Register = () => {
     // placehoder : input 필드를 회색깔로 바꿈
     <div>
       <div>
-        {" "}
         <input
-          ref={inputRef}
+          ref={inputRef} // input의 DOM 요소 전체를 inputRef.current에 자동으로 할당한다.
           name="name"
           value={input.name}
           onChange={onChange}
-          placeholder={"이름"}
+          placeholder={'이름'}
         ></input>
         <h3>{input.ref}</h3>
       </div>
@@ -62,6 +61,7 @@ const Register = () => {
         <h3>{input.name}</h3>
       </div>
       <input
+        ref={inputRef} // 2개가 할당이 되면, 마지막으로 할당된 DOM 요소가 할당된다. 
         name="birth"
         value={input.birth}
         onChange={onChange}
@@ -80,7 +80,7 @@ const Register = () => {
         <textarea
           name="bio"
           value={input.bio} // React의 상태값으로써 onChangeBio 함수에 전달되는 값
-          placeholder={"자기소개"}
+          placeholder={'자기소개'}
           onChange={onChange}
         ></textarea>
       </div>
