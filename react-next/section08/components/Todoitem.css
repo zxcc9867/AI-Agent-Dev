@@ -1,0 +1,33 @@
+.TodoItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+.TodoItem input {
+  width: 20px;
+}
+/* 
+TodoItem라는 클래스의 하위 클래스를 나타내기 위해 .content라고 한다. 
+.content로 스타일을 적용하는 것도 가능  */
+.TodoItem .content {
+  flex: 1;
+}
+.TodoItem .date {
+  font-size: 14px;
+  color: gray;
+}
+/* 
+.TodoItem button로 TodoItem의 버튼에 스타일을 적용할 수 있다 . 
+하지만 버튼이 여러개일 경우, 동일한 스타일이 적용될 수 있기 때문에 클래스 네임으로 지정하는것이 안전  */
+.TodoItem button {
+  cursor: pointer;
+  color : black;
+  background-color: rgba(255, 0, 0, 0.7);
+  border : none;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 5px;
+}
