@@ -27,10 +27,10 @@ const Editor = ({ onCreate }) => {
         onKeyDown={onKeyDown}
         ref={contentRef}
         value={content}
-        placeholder="새로운 Todo..."
+        placeholder="Add New Todo..."
         onChange={onChange}
       ></input>
-      <button onClick={onSubmit}>추가</button>
+      <button onClick={onSubmit}>Add</button>
     </div>
   );
 };

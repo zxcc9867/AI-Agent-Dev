@@ -16,7 +16,7 @@ const TodoItem = ({ id, isDone, content, date, onUpdate, onDelete }) => {
         ></input>
         <div className="content">{content}</div>
         <div className="date">{new Date(date).toLocaleDateString()}</div>
-        <button onClick={onDeleteList}>삭제</button>
+        <button onClick={onDeleteList}>Delete</button>
       </div>
     </div>
   );
