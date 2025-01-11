@@ -1,43 +1,122 @@
 import "./App.css";
+import { useReducer, useRef, createContext } from "react";
 import Home from "./pages/Home";
 import Diary from "./pages/Diary";
 import New from "./pages/New";
 import Notfound from "./pages/Notfound";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { getEmotionImage } from "./util/get-emtion-images";
+import { Routes, Route } from "react-router-dom";
+import Button from "./components/Button";
+import Header from "./components/Header";
+import Edit from "./pages/Edit";
 
 // 1. "/" : 모든 일기를 조회하는 Home 페이지
 // 2/ " /new" : 새로운 일기를 작성하는 new  페이지
 // 3. "/diary" : 일기를 상세히 조회하는 Diary 페이지
 
+const mockData = [
+  {
+    id: 1,
+    createdDate: new Date().getTime(),
+    emtionId: 1,
+    content: "1번 일기 내용",
+  },
+  {
+    id: 2,
+    createdDate: new Date().getTime(),
+    emtionId: 2,
+    content: "2번 일기 내용",
+  },
+];
+
+const DiaryContext = createContext()
+const DiaryDispatchContext = createContext()
+
 function App() {
-  const nav = useNavigate();
-  const onClickButton = () => {
-    nav("/new"); // 이동하고자 하는 경로를 넣는다
+  const idRef = useRef(3); // id값의 초기값으로 3으로 설정 mock 데이터의 아이디가 2번까지 있기 때문문
+  function reducer(state, action) {
+    switch (action.type) {
+      case "CREATE":
+        return [...state, action.data];
+      case "UPDATE":
+        return state.map((item) =>
+          String(item.id) === String(action.data.id) ? action.data : item
+        );
+      case "DELETE":
+        return state.filter((item) => String(item.id) !== String(action.id));
+      default:
+        return state;
+    }
+  }
+  // add new diary
+
+  const onCreate = (createdDate, emtionId, content) => {
+    dispatch({
+      type: "CREATE",
+      data: {
+        id: idRef.current++,
+        createdDate,
+        emtionId,
+        content,
+      },
+    });
   };
+
+  // modify diary
+
+  const onUpdate = (id, createdDate, emtionId, content) => {
+    dispatch({
+      type: "UPDATE",
+      data: {
+        id,
+        createdDate,
+        emtionId,
+        content,
+      },
+    });
+  };
+
+  const onDelete = (id) => {
+    dispatch({ type: "DELETE", id });
+  };
+
+  // delete diary
+
+  const [data, dispatch] = useReducer(reducer, mockData);
   return (
     // Routes 외부에 컴포넌트를 배치하면, 루트와 관계없이 무조건 렌더링이 됨
     <>
-      <div>
-        <img src={getEmotionImage(1)}></img>
-        <img src={getEmotionImage(2)}></img>
-        <img src={getEmotionImage(3)}></img>
-        <img src={getEmotionImage(4)}></img>
-        <img src={getEmotionImage(5)}></img>
-      </div>
-      <div>
-        <Link to={"/"}>Home</Link>
-        <Link to={"/new"}>New</Link>
-        <Link to={"/diary"}>Diary</Link>
-        <a href="/new">new</a>
-      </div>
-      <button onClick={onClickButton}>페이지 이동</button>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/new:id" element={<New />} />
-        <Route path="/diary/:id/:title" element={<Diary />} />
-        <Route path="*" element={<Notfound />}></Route>
-      </Routes>
+      <button
+        onClick={() => {
+          onCreate(new Date(), 1, "game !");
+        }}
+      >
+        일기 추가 테스트
+      </button>
+      <button
+        onClick={() => {
+          onUpdate(1, new Date().getTime(), 3, "수정된 일기입니다.");
+        }}
+      >
+        일기 수정 테스트
+      </button>
+      <button
+        onClick={() => {
+          onDelete(1);
+        }}
+      >
+        일기 삭제 테스트
+      </button>
+      <DiaryContext.Provider value={data}>
+        <DiaryDispatchContext.Provider value={{onCreate,onUpdate,onDelete}}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/edit/:id" element={<Edit />} />
+            <Route path="/new:id" element={<New />} />
+            <Route path="/diary/:id/:title" element={<Diary />} />
+            <Route path="*" element={<Notfound />}></Route>
+          </Routes>
+        </DiaryDispatchContext.Provider>
+      </DiaryContext.Provider>
     </>
   );
 }
