@@ -85,27 +85,7 @@ function App() {
   return (
     // Routes 외부에 컴포넌트를 배치하면, 루트와 관계없이 무조건 렌더링이 됨
     <>
-      <button
-        onClick={() => {
-          onCreate(new Date(), 1, "game !");
-        }}
-      >
-        일기 추가 테스트
-      </button>
-      <button
-        onClick={() => {
-          onUpdate(1, new Date().getTime(), 3, "수정된 일기입니다.");
-        }}
-      >
-        일기 수정 테스트
-      </button>
-      <button
-        onClick={() => {
-          onDelete(1);
-        }}
-      >
-        일기 삭제 테스트
-      </button>
+      
       <DiaryContext.Provider value={data}>
         <DiaryDispatchContext.Provider value={{onCreate,onUpdate,onDelete}}>
           <Routes>
