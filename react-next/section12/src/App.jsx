@@ -16,20 +16,26 @@ import Edit from "./pages/Edit";
 const mockData = [
   {
     id: 1,
-    createdDate: new Date().getTime(),
-    emtionId: 1,
+    createdDate: new Date("2025-01-19").getTime(),
+    emotionId: 1,
     content: "1번 일기 내용",
   },
   {
     id: 2,
-    createdDate: new Date().getTime(),
-    emtionId: 2,
+    createdDate: new Date("2025-01-18").getTime(),
+    emotionId: 2,
     content: "2번 일기 내용",
+  },
+  {
+    id: 3,
+    createdDate: new Date("2024-12-19").getTime(),
+    emotionId: 2,
+    content: "3번 일기 내용",
   },
 ];
 
-const DiaryContext = createContext()
-const DiaryDispatchContext = createContext()
+export const DiaryContext = createContext()
+export const DiaryDispatchContext = createContext()
 
 function App() {
   const idRef = useRef(3); // id값의 초기값으로 3으로 설정 mock 데이터의 아이디가 2번까지 있기 때문문
@@ -49,13 +55,13 @@ function App() {
   }
   // add new diary
 
-  const onCreate = (createdDate, emtionId, content) => {
+  const onCreate = (createdDate, emotionId, content) => {
     dispatch({
       type: "CREATE",
       data: {
         id: idRef.current++,
         createdDate,
-        emtionId,
+        emotionId,
         content,
       },
     });
@@ -63,13 +69,13 @@ function App() {
 
   // modify diary
 
-  const onUpdate = (id, createdDate, emtionId, content) => {
+  const onUpdate = (id, createdDate, emotionId, content) => {
     dispatch({
       type: "UPDATE",
       data: {
         id,
         createdDate,
-        emtionId,
+        emotionId,
         content,
       },
     });
@@ -91,8 +97,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/edit/:id" element={<Edit />} />
-            <Route path="/new:id" element={<New />} />
-            <Route path="/diary/:id/:title" element={<Diary />} />
+            <Route path="/new" element={<New />} />
+            <Route path="/diary/:id/" element={<Diary />} />
             <Route path="*" element={<Notfound />}></Route>
           </Routes>
         </DiaryDispatchContext.Provider>
