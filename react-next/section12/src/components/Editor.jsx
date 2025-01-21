@@ -1,7 +1,8 @@
 import "./Editor.css";
 import Button from "./Button";
 import EmotionItem from "./EmotionItem";
-import {useState} from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const emotionList = [
   {
@@ -26,45 +27,59 @@ const emotionList = [
   },
 ];
 
-const getStringedDate = (targetDate)=>{
-    // 날짜 -> YYYY-MM-DD
-    let year = targetDate.getFullYear();
-    let month = targetDate.getMonth() + 1;
-    let date = targetDate.getDate()
-    if (month < 10 ){
-        month = `0${month}`
+const getStringedDate = (targetDate) => {
+  // 날짜 -> YYYY-MM-DD
+  let year = targetDate.getFullYear();
+  let month = targetDate.getMonth() + 1;
+  let date = targetDate.getDate();
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  if (date < 10) {
+    date = `0${date}`;
+  }
+  return `${year}-${month}-${date}`;
+};
+const Editor = ({ onSubmit, initData }) => {
+  const [input, setInput] = useState({
+    createdDate: new Date(),
+    emotionId: 3,
+    content: "",
+  });
+
+  useEffect(() => {
+    if (initData) {
+      setInput({
+        ...initData,
+        createdDate: new Date(Number(initData.createdDate)),
+      });
     }
-    if ( date < 10){
-        date = `0${date}`
-    }
-    return `${year}-${month}-${date}`;
-}
-const Editor = () => {
-const [input,setInput] = useState({
-    createdDate : new Date(),
-    emotionId : 3,
-    content : "",
-});
+  }, [initData]);
 
-const onChangeInput = (e) => {
-    // e.target는 이벤트가 발생한 HTML 요소를 참조한다. 
-    // 여기서는 e.target 이벤트가 발생한 HTML 요소를 참조한다. 
-    console.log(e.target.name) // 어떠한 요소에 입력이 들어온건지 
-    console.log(e.target.value) // 입력된 값이 무엇인지 ? 
+  const nav = useNavigate();
 
-    let name = e.target.name
-    let value = e.target.value
+  const onSubmitForm = () => {
+    onSubmit(input);
+  };
 
-    if ( name === "createdDate" ) {
-        value = new Date(value)
+  const onChangeInput = (e) => {
+    // e.target는 이벤트가 발생한 HTML 요소를 참조한다.
+    // 여기서는 e.target 이벤트가 발생한 HTML 요소를 참조한다.
+    console.log(e.target.name); // 어떠한 요소에 입력이 들어온건지
+    console.log(e.target.value); // 입력된 값이 무엇인지 ?
+
+    let name = e.target.name;
+    let value = e.target.value;
+
+    if (name === "createdDate") {
+      value = new Date(value);
     }
     setInput({
-        ...input,
-        [name]: value, 
-    })
-}
+      ...input,
+      [name]: value,
+    });
+  };
 
-  
   return (
     <div>
       <section className="Editor">
@@ -96,11 +111,21 @@ const onChangeInput = (e) => {
         </section>
         <section className="content_section">
           <h4>오늘의 일기</h4>
-          <textarea name="content" value={input.content} onChange={onChangeInput} placeholder="오늘은 어땠나요?" />
+          <textarea
+            name="content"
+            value={input.content}
+            onChange={onChangeInput}
+            placeholder="오늘은 어땠나요?"
+          />
         </section>
         <section className="button_section">
-          <Button text={"취소하기"} />
-          <Button text={"작성완료"} type={"POSITIVE"} />
+          <Button
+            text={"취소하기"}
+            onClick={() => {
+              nav(-1);
+            }}
+          />
+          <Button onClick={onSubmitForm} text={"작성완료"} type={"POSITIVE"} />
         </section>
       </section>
     </div>

@@ -2,8 +2,15 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import Editor from "../components/Editor";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { DiaryDispatchContext } from "../App";
 const New = () => {
   const nav=useNavigate()
+  const { onCreate } = useContext(DiaryDispatchContext);
+  const onSubmit = (input)=>{
+    onCreate(input.createdDate.getTime(),input.emotionId,input.content)
+    nav('/',{replace: true}) // 뒤로가기 버튼을 방지하는 옵션으로 replace : true 사용
+  }
   return (
     <div>
       <Header
@@ -11,7 +18,7 @@ const New = () => {
         // -1을 nav에 넣어주면, 페이지를 뒤로가기 
         leftChild={<Button onClick={()=>nav(-1)} text={"< 뒤로가기"} />}
       />
-      <Editor></Editor>
+      <Editor onSubmit={onSubmit}></Editor>
     </div>
   );
 };
