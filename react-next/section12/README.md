@@ -1,3 +1,8 @@
-## TO DO LIST ! 
+## Diary ! 
 
-<img src="https://github.com/user-attachments/assets/078dfd83-f418-4aad-befb-d658cca9dd83" width=800>
+### Home
+<img src="image.png" width=800>
+
+### Edit
+
+<img src="image-1.png" width=800>
