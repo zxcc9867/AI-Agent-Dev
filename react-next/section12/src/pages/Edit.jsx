@@ -6,13 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { DiaryDispatchContext, DiaryContext } from "../App";
 import { useContext, useEffect, useState } from "react";
 import useDiary from "../hooks/useDiary";
+import usePageTitle from "../hooks/usePagetitle";
 const Edit = () => {
   const { onDelete, onUpdate } = useContext(DiaryDispatchContext);
   const data = useContext(DiaryContext);
   const nav = useNavigate();
   const params = useParams();
-  const curDiaryItem = useDiary(params.id)
-
+  const curDiaryItem = useDiary(params.id);
+  usePageTitle(`${params.id}번 일기 수정`);
   const onClickDelete = () => {
     if (window.confirm("일기를 정말 삭제할까요?")) {
       // 일기 삭제 로직
@@ -32,7 +33,7 @@ const Edit = () => {
     }
     nav("/", { replace: true });
   };
-  
+
   return (
     <div>
       <Header
