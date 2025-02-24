@@ -9,11 +9,13 @@ import useInput from '../components/useInput';
 const HookExam = () => {
   const [input, onChange] = useInput(); // 함수로 공통화를 만들면, 여러개의 input을 사용할 수 있다.
   const [input2, onChange2] = useInput();
+  console.log(`온체인지 : ${onChange}`);
   return (
     <div>
       <input value={input} onChange={onChange} />
       <input value={input2} onChange={onChange2} />
     </div>
+    
   );
 };
 
