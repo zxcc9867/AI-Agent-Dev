@@ -1,0 +1,1 @@
+[('A', 'Python'), ('B', 'JavaScript'), ('C', 'PHP'), ('D', 'Rust'), ('F', 'Solidity'), ('G', 'Assembly')]
