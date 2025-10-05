@@ -1,0 +1,54 @@
+// Prisma 스키마 파일
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pages     Page[]
+}
+
+model Page {
+  id          String   @id @default(uuid())
+  title       String   @default("제목 없음")
+  content     String?  @default("")
+  icon        String?
+  coverImage  String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blocks      Block[]
+}
+
+model Block {
+  id        String   @id @default(uuid())
+  type      String   // text, heading, code, image, etc.
+  content   String?
+  language  String?  // for code blocks
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+model CodeExecution {
+  id        String   @id @default(uuid())
+  language  String
+  code      String
+  output    String?
+  error     String?
+  createdAt DateTime @default(now())
+}
