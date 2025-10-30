@@ -1,0 +1,91 @@
+from gpt_functions import get_current_time, tools
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
+import json
+
+
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")  # 환경 변수에서 API 키 가져오기
+
+client = OpenAI(api_key=api_key)  # 오픈AI 클라이언트의 인스턴스 생성
+
+def get_ai_response(messages, tools=None, stream=True):
+    response = client.chat.completions.create(
+        model='gpt-4o',
+        messages=messages,
+        tools=tools,
+    )
+    return response
+
+messages = [{
+    "role": 'system','content': '너는 사용자를 도와주는 상담사야.'
+}]
+
+while True:
+    user_input = input('사용자\t: ')
+    if user_input == 'exit':
+        break
+    messages.append({'role':'user','content':user_input})
+    ai_response = get_ai_response(messages, tools=tools)
+
+    # ai_message에서는 gpt가 함수 (tool)를 호출할 필요가 있다고 판단하면, content에는 None을 반환하고,
+    # tool_call 속성에 호출할 함수의 이름과 매개변수를 포함한 객체를 반환함
+
+    ai_message = ai_response.choices[0].message  # choice는 객체 , ai는 여러 응답을 생성하므로, 그중에서 첫번째 값을 가져옴
+    """
+    get_ai_response = ChatCompletion(
+    id='chatcmpl-xxx',
+    model='gpt-4o',
+    choices=[...],      # choices는 객체의 속성(attribute)
+    usage={...},
+    created=1234567890)
+    """
+    # 어떠한 tool을 요구하는지 확인
+    """
+    ai message는 
+    
+    ChatCompletionMessage(content=None, refusal=None, 
+    role='assistant', annotations=[], audio=None, function_call=None, 
+    tool_calls=[ChatCompletionMessageFunctionToolCall(id='call_5y4VqdgPLBdCnKAPIzpvngHP', 
+    function=Function(arguments='{}', name='get_current_time'), type='function')])
+    
+    이런식으로 반환
+    ChatCompletionMessageFunctionToolCall는 인스턴스
+    인스턴스의 정의된 값에 접근을 하려면 . 을 사용
+    class Person:
+    def __init__(self, name, age):
+        self.name = name  # name은 속성명
+        self.age = age    # age는 속성명
+
+        person = Person(name='김철수', age=25)
+
+        # ✅ 올바른 접근                   ChatCompletionMessageFunctionToolCall
+        print(person.name)  # '김철수' 출력 -> 와 같이 tool_calls[0].name.function.name 이런식으로 접근 
+        print(person.age)   # 25 출력
+    """
+    if tool_calls := ai_message.tool_calls:
+        # 여러 정보에 대해서 한번에 값을 받을 경우 
+        # ex. ) 뉴욕, 서울, 도쿄 시간을 알려줘 -> 3번 tool을 호출할 필요가 있음. 
+        for tool_call in tool_calls:
+            print('Tool call requested:', tool_call.function.name)
+            tool_name = tool_calls[0].function.name
+            tool_call_id = tool_calls[0].id
+            # 타임존에 대한 argument는 gpt가 사용자의 입력을 바탕으로, tool의 정의를 보고, 필요한 값을 넣음
+            arguments_str = json.loads(tool_calls[0].function.arguments) # 이 값을 사용하기 위해 gpt가  반환한 json 형태의 문자열을 딕셔너리로 변경 
+            print('arguments is :', arguments_str)
+            # ai가 호출한 tool을 파악하고, 이를 다시 messages에 추가
+            if tool_name == 'get_current_time':
+                messages.append({
+                    'role' : 'function', # 함수 실행 결과 반환 
+                    'name':tool_name,
+                    'content': get_current_time(timezone=arguments_str['timezone']), # 함수 실행 결과를 content로 설정 
+                    'tool_call_id':tool_call_id
+                })
+        messages.append({'role':'system', 'content': '이제 주어진 결과를 바탕으로 답변해주세요.'})
+        ai_reponse = get_ai_response(messages, tools=tools)
+        print('get ai response after tool call:', ai_reponse)
+        ai_message = ai_reponse.choices[0].message
+
+    messages.append(ai_message)
+    print('AI\t:', ai_message.content) # ai의 대답 
