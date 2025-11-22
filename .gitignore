@@ -32,3 +32,5 @@ build/
 dist/
 *.egg-info/
 
+# Large files (GitHub limit: 100MB)
+*.pdf
