@@ -289,8 +289,8 @@ if prompt := st.chat_input('무엇이든 물어보세요.'):
 
 2. 사용자 입력: "안녕"
    ├─ messages에 HumanMessage("안녕") 추가
-   ├─ AI 응답 생성
-   └─ messages에 AIMessage("안녕하세요!") 추가
+   ├─ AI 응답 생성 (문자열로 반환)
+   └─ messages에 AIMessage(content=응답문자열) 추가
 
 3. 사용자 입력: "날씨는?"
    ├─ 이전 대화 기록 표시 (안녕 → 안녕하세요!)
@@ -298,6 +298,11 @@ if prompt := st.chat_input('무엇이든 물어보세요.'):
    ├─ 전체 대화 기록을 AI에 전달
    └─ AI가 맥락을 이해하고 응답
 ```
+
+### 중요 포인트
+- **st.chat_message(message.type)**: `message` 객체가 아닌 `message.type` 문자열 사용
+- **AIMessage로 변환**: `st.write_stream()`은 문자열을 반환하므로 `AIMessage(content=response)`로 감싸서 저장
+- **message.type 값**: "human" (사용자), "ai" (AI), "system" (시스템)
 
 ### 세션 상태의 장점
 - **대화 맥락 유지**: AI가 이전 대화를 기억하고 연속적인 대화 가능
