@@ -98,7 +98,7 @@
 
 #### 남은 작업
 
-- 원격 agent/multilingual-readmes 브랜치 삭제는 별도 승인 시 수행
+- 없음. 원격 agent/multilingual-readmes 브랜치가 존재하지 않음을 확인
 
 #### 다음 우선순위
 
